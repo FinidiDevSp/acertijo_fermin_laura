@@ -144,6 +144,8 @@
         <h2>¡Todo resuelto! 🎉</h2>
         <p>Enhorabuena, mente brillante y corazón rojillo. Aquí está tu código:</p>
         <p class="code" id="giftCode">OSASUNA-2025</p>
+        <button id="btnCopy">Copiar código</button>
+        <div id="copyMsg" class="status"></div>
       </div>
     </div>
   </main>
@@ -168,13 +170,15 @@
     function save(){localStorage.setItem(STATE_KEY,JSON.stringify(state))}
     function load(){try{const raw=localStorage.getItem(STATE_KEY);if(raw){const s=JSON.parse(raw);if(Number.isInteger(s.idx))state=s}}catch(e){}}
     function setProgress(i){const pct=Math.min(100,Math.round((i/RIDDLES.length)*100));document.getElementById('bar').style.width=pct+'%';document.getElementById('progressText').textContent=`${i}/${RIDDLES.length}`}
-    function showRiddle(){const p=document.getElementById('prompt');const h=document.getElementById('hint');const s=document.getElementById('status');const ans=document.getElementById('answer');if(state.idx>=RIDDLES.length){setProgress(RIDDLES.length);p.textContent='¡Has completado todos los acertijos!';h.style.display='none';document.getElementById('final').style.display='block';document.getElementById('giftCode').textContent=FINAL_CODE;ans.disabled=true;return;}const r=RIDDLES[state.idx];p.textContent=r.prompt;h.textContent='💡 '+(r.hint||'');h.style.display=r.hint?'block':'none';s.textContent='';ans.value='';ans.disabled=false;setProgress(state.idx);ans.focus()}
+    function showRiddle(){const p=document.getElementById('prompt');const h=document.getElementById('hint');const s=document.getElementById('status');const ans=document.getElementById('answer');if(state.idx>=RIDDLES.length){setProgress(RIDDLES.length);p.textContent='¡Has completado todos los acertijos!';h.style.display='none';document.getElementById('final').style.display='block';document.getElementById('giftCode').textContent=FINAL_CODE;const m=document.getElementById('copyMsg');m.textContent='';m.className='status';ans.disabled=true;return;}const r=RIDDLES[state.idx];p.textContent=r.prompt;h.textContent='💡 '+(r.hint||'');h.style.display=r.hint?'block':'none';s.textContent='';ans.value='';ans.disabled=false;setProgress(state.idx);ans.focus()}
     function check(){const input=norm(document.getElementById('answer').value);if(!input)return;const r=RIDDLES[state.idx];const ok=r.answers.some(a=>norm(a)===input);const s=document.getElementById('status');if(ok){s.className='status ok';s.textContent='¡Correcto!';state.idx++;save();setTimeout(showRiddle,700)}else{s.className='status bad';s.textContent='No es correcto.'}}
     function hint(){document.getElementById('hint').style.display='block'}
     function resetAll(){state.idx=0;save();showRiddle()}
+    function copyCode(){navigator.clipboard.writeText(FINAL_CODE).then(()=>{const m=document.getElementById('copyMsg');m.className='status ok';m.textContent='Copiado al portapapeles'})}
     document.getElementById('btnCheck').addEventListener('click',check);
     document.getElementById('btnHint').addEventListener('click',hint);
     document.getElementById('btnReset').addEventListener('click',resetAll);
+    document.getElementById('btnCopy').addEventListener('click',copyCode);
     document.addEventListener('keydown',(e)=>{if(e.key==='Enter')check()});
     function startGame(){document.getElementById('intro').style.display='none';showRiddle()}
     document.getElementById('btnStart').addEventListener('click',startGame);
