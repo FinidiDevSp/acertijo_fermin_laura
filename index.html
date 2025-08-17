@@ -109,9 +109,18 @@
     a:hover{text-decoration:underline}
 
     .chip{display:inline-block; background:#f1f5f9; border:1px solid #e5e7eb; color:#0f172a; padding:.15rem .5rem; border-radius:999px; font-size:.8rem}
+    /* Intro overlay */
+    #intro{position:fixed; inset:0; display:grid; place-items:center; background:rgba(0,0,0,.8); color:#fff; text-align:center; padding:1.5rem; z-index:9999}
+    #intro button{margin-top:1rem}
   </style>
 </head>
 <body>
+  <div id="intro">
+    <div>
+      <p>Resuelve los acertijos rojillos y descubre la sorpresa final.</p>
+      <button id="btnStart">Comenzar</button>
+    </div>
+  </div>
   <header>
     <div class="crest"><span class="dot"></span> Aupa Osasuna</div>
     <h1 class="hero">FERMÍN <span class="amp">&</span> LAURA</h1>
@@ -160,8 +169,13 @@
     function check(){const input=norm(document.getElementById('answer').value);if(!input)return;const r=RIDDLES[state.idx];const ok=r.answers.some(a=>norm(a)===input);const s=document.getElementById('status');if(ok){s.className='status ok';s.textContent='¡Correcto!';state.idx++;save();setTimeout(showRiddle,700)}else{s.className='status bad';s.textContent='No es correcto.'}}
     function hint(){document.getElementById('hint').style.display='block'}
     function resetAll(){state.idx=0;save();showRiddle()}
-    document.getElementById('btnCheck').addEventListener('click',check);document.getElementById('btnHint').addEventListener('click',hint);document.getElementById('btnReset').addEventListener('click',resetAll);document.addEventListener('keydown',(e)=>{if(e.key==='Enter')check()});
-    load();showRiddle();
+    document.getElementById('btnCheck').addEventListener('click',check);
+    document.getElementById('btnHint').addEventListener('click',hint);
+    document.getElementById('btnReset').addEventListener('click',resetAll);
+    document.addEventListener('keydown',(e)=>{if(e.key==='Enter')check()});
+    function startGame(){document.getElementById('intro').style.display='none';showRiddle()}
+    document.getElementById('btnStart').addEventListener('click',startGame);
+    load();
   </script>
 </body>
 </html>
