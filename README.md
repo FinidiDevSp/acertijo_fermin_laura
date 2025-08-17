@@ -9,4 +9,4 @@ Juego web de acertijos encadenados inspirado en Pamplona y Osasuna.
 -   Confeti al acertar y animación al fallar.
 -   Registro de intentos en `localStorage`.
 
-    2.0
+    3.0

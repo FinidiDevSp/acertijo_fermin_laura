@@ -1,209 +1,72 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Fermin & Laura · Acertijo Rojillo</title>
-  <meta name="description" content="Juego de acertijos encadenados inspirado en Pamplona y Osasuna para celebrar la boda de Fermin y Laura." />
-  <style>
-    :root{
-      --rojillo:#C40C2E; /* rojo Osasuna aprox */
-      --azul:#0A2342;   /* azul oscuro */
-      --oro:#C9A227;    /* acento dorado */
-      --crema:#fff9f3;
-      --ok:#22c55e; /* verde éxito */
-      --warn:#f59e0b;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Noto Sans", "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      color:#0f172a;
-      /* Fondo con patrón sutil rojillo/azul */
-      background:
-        radial-gradient(1200px 800px at 20% 10%, #ffffff 0%, #fafafa 45%, #f3f4f6 100%),
-        linear-gradient(135deg, rgba(196,12,46,.08) 0%, rgba(10,35,66,.08) 100%);
-    }
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Fermin & Laura · Acertijo Rojillo</title>
+        <meta
+            name="description"
+            content="Juego de acertijos encadenados inspirado en Pamplona y Osasuna para celebrar la boda de Fermin y Laura."
+        />
+        <link rel="stylesheet" href="styles/main.css">
 
-    /* ===== Encabezado hero ===== */
-    header{
-      position:relative; overflow:hidden; color:white; text-align:center;
-      padding:3.2rem 1.25rem 4.2rem; isolation:isolate;
-      background:
-        radial-gradient(120% 140% at 10% -20%, #e01e3f 0%, var(--rojillo) 35%, #8e0b22 70%),
-        linear-gradient(90deg, var(--azul), var(--rojillo));
-    }
-    /* ondas decorativas */
-    header::after{
-      content:""; position:absolute; inset:auto 0 0 0; height:120px; z-index:-1;
-      background: radial-gradient(80% 100% at 50% 0%, rgba(255,255,255,.35), transparent 70%);
-      filter: blur(20px);
-    }
-    .crest{
-      display:inline-flex; align-items:center; gap:.6rem; padding:.35rem .65rem; border-radius:999px;
-      background: rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25);
-      font-weight:700; letter-spacing:.3px; backdrop-filter: blur(6px);
-    }
-    .crest .dot{width:.55rem;height:.55rem;border-radius:999px;background:var(--oro); box-shadow:0 0 0 2px rgba(0,0,0,.15) inset}
+    </head>
+    <body>
+        <header>
+            <div class="crest">
+                <span class="dot"></span> ENHORABUENA PAREJA
+            </div>
+            <h1 class="hero">FERMÍN <span class="amp">&</span> LAURA</h1>
+            <div class="sub">Acertijos de boda · Nueva vida juntos</div>
+        </header>
 
-    h1.hero{
-      margin:.9rem 0 0; font-size: clamp(2rem, 3.8vw + 1rem, 3.6rem);
-      letter-spacing:.5px; line-height:1.05; font-weight:900;
-      text-shadow: 0 8px 30px rgba(0,0,0,.35);
-    }
-    h1.hero .amp{color:var(--oro); font-weight:900; padding:0 .25rem}
-    .sub{opacity:.95; margin-top:.5rem; font-size:clamp(.95rem, .7vw + .6rem, 1.15rem)}
+        <main>
+            <div class="card" id="app">
+                <div id="introCard">
+                    <p>
+                        ¡Bienvenidos! Ya habéis disfrutado de un pequeño
+                        adelanto del bote. Para llevaros el premio completo
+                        deberéis resolver 11 acertijos y obtener un código
+                        final. Cuando nos lo enviéis, el bote será vuestro.
+                    </p>
+                    <button id="btnStart">Comenzar</button>
+                </div>
 
-    main{max-width:980px; margin: -2.2rem auto 3rem; padding: 0 1rem}
+                <div id="riddleCard" style="display: none">
+                    <div class="prompt" id="prompt">Cargando acertijo…</div>
+                    <div class="hint" id="hint" style="display: none"></div>
+                    <div class="controls">
+                        <input
+                            id="answer"
+                            type="text"
+                            placeholder="Escribe tu respuesta…"
+                            autocomplete="off"
+                        />
+                        <button id="btnCheck">Comprobar</button>
+                        <button id="btnHint">Pista (3)</button>
+                        <button id="btnReset">Reiniciar</button>
+                    </div>
+                    <div class="status" id="status"></div>
+                    <div class="progress"><div class="bar" id="bar"></div></div>
+                    <div id="progressText">0/11</div>
+                    <div class="final" id="final">
+                        <h2>¡Todo resuelto! 🎉</h2>
+                        <p>
+                            Enhorabuena, mente brillante y corazón rojillo. Aquí
+                            está tu código:
+                        </p>
+                        <p class="code" id="giftCode">OSASUNA-2025</p>
+                        <button id="btnCopy">Copiar código</button>
+                        <div id="copyMsg" class="status"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
 
-    /* Tarjeta principal "glass" */
-    .card{
-      position:relative;
-      background: linear-gradient(180deg, rgba(255,255,255,.85), rgba(255,255,255,.92));
-      padding:1.35rem; border-radius:1.2rem; box-shadow:0 18px 45px rgba(10,35,66,.12);
-      border:1px solid rgba(10,35,66,.08);
-      backdrop-filter: blur(6px);
-    }
-    .card::before{
-      content:""; position:absolute; inset:-1px; border-radius:1.25rem; z-index:-1;
-      background: linear-gradient(135deg, rgba(201,162,39,.45), rgba(196,12,46,.35), rgba(10,35,66,.35));
-      filter: blur(14px); opacity:.45;
-    }
+        <footer>
+            <p>Celebrando el amor y la nueva aventura · Fermin & Laura</p>
+        </footer>
+        <script src="scripts/app.js" defer></script>
 
-    .step{display:flex; align-items:flex-start; gap:1rem; margin-bottom:1rem}
-    .step .n{flex:0 0 auto; width:44px; height:44px; display:grid; place-items:center; border-radius:.85rem; background:var(--azul); color:#fff; font-weight:800; box-shadow:0 6px 16px rgba(10,35,66,.28)}
-    .step .txt{flex:1}
-    .prompt{font-size:1.15rem; line-height:1.55}
-    .hint{font-size:.95rem; color:#4b5563}
-
-    .controls{display:flex; gap:.6rem; flex-wrap:wrap; margin-top:.9rem}
-    input[type="text"]{
-      flex:1; min-width:260px;
-      border:2px solid #e4e7ec; border-radius:.85rem; padding:.85rem 1rem; font-size:1rem; outline:none; transition:.18s border-color, .18s box-shadow;
-      background:#fff;
-    }
-    input[type="text"]:focus{border-color:var(--rojillo); box-shadow:0 0 0 5px rgba(196,12,46,.12)}
-    button{
-      border:0; background:var(--rojillo); color:white; padding:.85rem 1.05rem; border-radius:.85rem; font-weight:800; cursor:pointer; transition:.22s transform, .22s opacity, .22s background; letter-spacing:.2px;
-      box-shadow:0 6px 14px rgba(196,12,46,.25)
-    }
-    button.secondary{background:#f3f4f6; color:#111; box-shadow:none; border:1px solid #e5e7eb}
-    button.ghost{background:transparent; border:2px solid #e5e7eb; color:#111; box-shadow:none}
-    button:hover{transform:translateY(-2px)}
-
-    .status{margin-top:.55rem; font-weight:700}
-    .status.ok{color:var(--ok)}
-    .status.bad{color:#dc2626}
-
-    .progress{margin:1.1rem 0 0; background:#eef2f7; height:12px; border-radius:999px; overflow:hidden; border:1px solid #e8eef6}
-    .bar{height:100%; width:0%; background:linear-gradient(90deg,var(--oro), var(--rojillo))}
-
-    .final{display:none; text-align:center; padding:2rem 1rem; border:2px dashed #e6e6e6; border-radius:1rem; background:var(--crema)}
-    .final h2{color:var(--azul)}
-    .final .code{font-family: ui-monospace, Menlo, Consolas, monospace; font-size:1.15rem; background:#fff; padding:.5rem .75rem; border-radius:.5rem; border:1px solid #e5e5e5}
-    .muted{color:#6b7280}
-
-    footer{max-width:980px; margin: 1rem auto 2.5rem; padding:0 1rem; color:#6b7280; font-size:.92rem}
-    a{color:var(--azul); text-decoration:none}
-    a:hover{text-decoration:underline}
-
-    .chip{display:inline-block; background:#f1f5f9; border:1px solid #e5e7eb; color:#0f172a; padding:.15rem .5rem; border-radius:999px; font-size:.8rem}
-    /* Confetti and shake animations */
-    .confetti-container{position:fixed; inset:0; pointer-events:none; overflow:hidden;}
-    .confetti{position:absolute; width:8px; height:8px; border-radius:2px; opacity:0; animation:confetti 1s linear forwards}
-    @keyframes confetti{from{transform:translateY(-20px) rotate(0); opacity:1}to{transform:translateY(100vh) rotate(720deg); opacity:0}}
-    .shake{animation:shake .4s}
-    @keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
-    </style>
-  </head>
-  <body>
-  <header>
-    <div class="crest"><span class="dot"></span> ENHORABUENA PAREJA</div>
-    <h1 class="hero">FERMÍN <span class="amp">&</span> LAURA</h1>
-    <div class="sub">Acertijos de boda · Nueva vida juntos</div>
-  </header>
-
-  <main>
-    <div class="card" id="app">
-      <div id="introCard">
-        <p>¡Bienvenidos! Ya habéis disfrutado de un pequeño adelanto del bote.
-          Para llevaros el premio completo deberéis resolver 11 acertijos y
-          obtener un código final. Cuando nos lo enviéis, el bote será
-          vuestro.</p>
-        <button id="btnStart">Comenzar</button>
-      </div>
-
-      <div id="riddleCard" style="display:none">
-        <div class="prompt" id="prompt">Cargando acertijo…</div>
-        <div class="hint" id="hint" style="display:none"></div>
-        <div class="controls">
-          <input id="answer" type="text" placeholder="Escribe tu respuesta…" autocomplete="off" />
-          <button id="btnCheck">Comprobar</button>
-          <button id="btnHint">Pista (3)</button>
-          <button id="btnReset">Reiniciar</button>
-        </div>
-        <div class="status" id="status"></div>
-        <div class="progress"><div class="bar" id="bar"></div></div>
-        <div id="progressText">0/11</div>
-        <div class="final" id="final">
-          <h2>¡Todo resuelto! 🎉</h2>
-          <p>Enhorabuena, mente brillante y corazón rojillo. Aquí está tu código:</p>
-          <p class="code" id="giftCode">OSASUNA-2025</p>
-          <button id="btnCopy">Copiar código</button>
-          <div id="copyMsg" class="status"></div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <footer>
-    <p>Celebrando el amor y la nueva aventura · Fermin & Laura</p>
-  </footer>
-
-  <script>
-    function norm(s){return s.toString().trim().toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'').replace(/\s+/g,' ')}
-    const RIDDLES=[
-      {prompt:"Cada julio me tiro al encierro, pañuelo rojo y vino en el cuerpo. ¿Qué fiesta mundialmente famosa soy?",answers:["san fermin","sanfermines","fiestas de san fermin"],hint:"Toros corren por la calle Estafeta."},
-      {prompt:"En la fiesta anterior yo nací; en mis calles suena el chupinazo. ¿Qué ciudad soy?",answers:["pamplona","iruna","iruña"],hint:"Capital de Navarra."},
-      {prompt:"En esa ciudad ruge un león sin melena, vestido de rojo y azul. ¿Qué equipo es?",answers:["osasuna","club atletico osasuna"],hint:"Orgullo rojillo."},
-      {prompt:"El león juega en casa donde el grito es «¡Rojillos!». ¿Cómo se llama su estadio?",answers:["el sadar","sadar"],hint:"Reformado en 2019."},
-      {prompt:"Orgullo de fundación, en cuatro cifras se escribió mi origen. ¿Cuál es ese año?",answers:["1920"],hint:"Nació el club."},
-      {prompt:"Por mis aguas pasa la fiesta y la ciudad. ¿Qué río atraviesa Pamplona?",answers:["arga"],hint:"Nace en Esteribar."},
-      {prompt:"Mezcla de vino y cola que anima las noches sanfermineras. ¿Qué bebida es?",answers:["calimocho","kalimotxo"],hint:"Roja como Osasuna."},
-      {prompt:"El club forma a sus canteranos en un lugar especial. ¿Cómo se llama la ciudad deportiva rojilla?",answers:["tajonar"],hint:"Escuela de Osasuna."},
-      {prompt:"La afición del león viste de rojo. ¿Cómo se les conoce cariñosamente?",answers:["rojillos"],hint:"Apodo por su color."},
-      {prompt:"Cuando el equipo salta al campo todos gritan una frase que empieza con «Aúpa». ¿Cuál es el grito?",answers:["aupa osasuna","aupa osasuna!","¡aupa osasuna!"],hint:"Aliento clásico."},
-      {prompt:"Toda esta serie de pistas conduce al motivo verdadero de hoy. ¿Qué celebramos?",answers:["boda","la boda","una boda"],hint:"Fermín y Laura se dan el sí."}
-    ];
-    const FINAL_CODE="OSASUNA-2025";
-    const TOTAL_HINTS=3;
-    const STATE_KEY='acertijo-boda-ferminlaura';
-    let state={idx:0,hints:0,attempts:[]};
-    function save(){localStorage.setItem(STATE_KEY,JSON.stringify(state))}
-    function load(){try{const raw=localStorage.getItem(STATE_KEY);if(raw){const s=JSON.parse(raw);if(Number.isInteger(s.idx))state.idx=s.idx;if(Number.isInteger(s.hints))state.hints=s.hints;if(Array.isArray(s.attempts))state.attempts=s.attempts}}catch(e){}}
-    function setProgress(i){const pct=Math.min(100,Math.round((i/RIDDLES.length)*100));document.getElementById('bar').style.width=pct+'%';document.getElementById('progressText').textContent=`${i}/${RIDDLES.length}`}
-    function updateHintButton(){const btn=document.getElementById('btnHint');const rem=TOTAL_HINTS-state.hints;btn.textContent=rem>0?`Pista (${rem})`:'Sin pistas';btn.disabled=rem<=0}
-    function showRiddle(){const p=document.getElementById('prompt');const h=document.getElementById('hint');const s=document.getElementById('status');const ans=document.getElementById('answer');if(state.idx>=RIDDLES.length){setProgress(RIDDLES.length);p.textContent='¡Has completado todos los acertijos!';h.style.display='none';document.getElementById('final').style.display='block';document.getElementById('giftCode').textContent=FINAL_CODE;const m=document.getElementById('copyMsg');m.textContent='';m.className='status';ans.disabled=true;const btnHint=document.getElementById('btnHint');btnHint.disabled=true;btnHint.textContent='Sin pistas';return;}const r=RIDDLES[state.idx];p.textContent=r.prompt;h.textContent='💡 '+(r.hint||'');h.style.display='none';s.textContent='';ans.value='';ans.disabled=false;setProgress(state.idx);ans.focus();updateHintButton()}
-    function confetti(){const container=document.createElement('div');container.className='confetti-container';for(let i=0;i<40;i++){const c=document.createElement('div');c.className='confetti';c.style.left=Math.random()*100+'%';c.style.backgroundColor=`hsl(${Math.random()*360},100%,50%)`;c.style.animationDelay=Math.random()*0.5+'s';container.appendChild(c);}document.body.appendChild(container);setTimeout(()=>container.remove(),1000)}
-    function failAnim(){const ans=document.getElementById('answer');ans.classList.add('shake');setTimeout(()=>ans.classList.remove('shake'),500)}
-    function check(){const ansEl=document.getElementById('answer');const input=norm(ansEl.value);if(!input)return;const r=RIDDLES[state.idx];const ok=r.answers.some(a=>norm(a)===input);const s=document.getElementById('status');state.attempts.push({idx:state.idx,answer:input,ok,ts:Date.now()});if(ok){s.className='status ok';s.textContent='¡Correcto!';confetti();state.idx++;save();setTimeout(showRiddle,700)}else{s.className='status bad';s.textContent='No es correcto.';failAnim();save()}}
-    function hint(){if(state.hints>=TOTAL_HINTS){const s=document.getElementById('status');s.className='status bad';s.textContent='No quedan más pistas.';return;}const r=RIDDLES[state.idx];if(!r.hint){const s=document.getElementById('status');s.className='status bad';s.textContent='Sin pista disponible.';return;}document.getElementById('hint').style.display='block';state.hints++;updateHintButton();save()}
-    function resetAll(){state={idx:0,hints:0,attempts:[]};save();showRiddle()}
-    function copyCode(){navigator.clipboard.writeText(FINAL_CODE).then(()=>{const m=document.getElementById('copyMsg');m.className='status ok';m.textContent='Copiado al portapapeles'})}
-    document.getElementById('btnCheck').addEventListener('click',check);
-    document.getElementById('btnHint').addEventListener('click',hint);
-    document.getElementById('btnReset').addEventListener('click',resetAll);
-    document.getElementById('btnCopy').addEventListener('click',copyCode);
-    document.addEventListener('keydown',(e)=>{if(e.key==='Enter')check()});
-    function startGame(){
-      document.getElementById('introCard').style.display='none';
-      document.getElementById('riddleCard').style.display='block';
-      showRiddle();
-    }
-    document.getElementById('btnStart').addEventListener('click',startGame);
-    load();
-    updateHintButton();
-  </script>
-</body>
+    </body>
 </html>
