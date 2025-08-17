@@ -154,10 +154,12 @@
   <script>
     function norm(s){return s.toString().trim().toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu,'').replace(/\s+/g,' ')}
     const RIDDLES=[
-      {prompt:"En julio me visto de blanco y rojo, y los toros me hacen famoso. ¿Qué ciudad soy?",answers:["pamplona","iruna"],hint:"Piensa en San Fermín."},
-      {prompt:"En la ciudad que has nombrado yo nací; en El Sadar rujo sin fin. ¿Qué equipo soy?",answers:["osasuna","club atletico osasuna"],hint:"Equipo rojillo de Navarra."},
-      {prompt:"Cuatro cifras abren el marcador, soy orgullo de fundación. ¿Qué número soy?",answers:["1920"],hint:"Año de fundación de Osasuna."},
-      {prompt:"Ni fútbol ni toros hoy mandan, sino el motivo verdadero. ¿Qué evento celebramos?",answers:["boda","la boda"],hint:"Dos que se quieren."}
+      {prompt:"Cada julio me tiro al encierro, pañuelo rojo y vino en el cuerpo. ¿Qué fiesta mundialmente famosa soy?",answers:["san fermin","sanfermines","fiestas de san fermin"],hint:"Toros corren por la calle Estafeta."},
+      {prompt:"En la fiesta anterior yo nací; en mis calles suena el chupinazo. ¿Qué ciudad soy?",answers:["pamplona","iruna","iruña"],hint:"Capital de Navarra."},
+      {prompt:"En esa ciudad ruge un león sin melena, vestido de rojo y azul. ¿Qué equipo es?",answers:["osasuna","club atletico osasuna"],hint:"Orgullo rojillo."},
+      {prompt:"El león juega en casa donde el grito es «¡Rojillos!». ¿Cómo se llama su estadio?",answers:["el sadar","sadar"],hint:"Reformado en 2019."},
+      {prompt:"Orgullo de fundación, en cuatro cifras se escribió mi origen. ¿Cuál es ese año?",answers:["1920"],hint:"Nació el club."},
+      {prompt:"Toda esta serie de pistas conduce al motivo verdadero de hoy. ¿Qué celebramos?",answers:["boda","la boda","una boda"],hint:"Fermín y Laura se dan el sí."}
     ];
     const FINAL_CODE="OSASUNA-2025";
     const STATE_KEY='acertijo-boda-ferminlaura';
@@ -165,7 +167,7 @@
     function save(){localStorage.setItem(STATE_KEY,JSON.stringify(state))}
     function load(){try{const raw=localStorage.getItem(STATE_KEY);if(raw){const s=JSON.parse(raw);if(Number.isInteger(s.idx))state=s}}catch(e){}}
     function setProgress(i){const pct=Math.min(100,Math.round((i/RIDDLES.length)*100));document.getElementById('bar').style.width=pct+'%'}
-    function showRiddle(){const p=document.getElementById('prompt');const h=document.getElementById('hint');const s=document.getElementById('status');const ans=document.getElementById('answer');if(state.idx>=RIDDLES.length){p.textContent='¡Has completado todos los acertijos!';h.style.display='none';document.getElementById('final').style.display='block';document.getElementById('giftCode').textContent=FINAL_CODE;ans.disabled=true;return;}const r=RIDDLES[state.idx];p.textContent=r.prompt;h.textContent='💡 '+(r.hint||'');h.style.display=r.hint?'block':'none';s.textContent='';ans.value='';ans.disabled=false;setProgress(state.idx);ans.focus()}
+    function showRiddle(){const p=document.getElementById('prompt');const h=document.getElementById('hint');const s=document.getElementById('status');const ans=document.getElementById('answer');if(state.idx>=RIDDLES.length){setProgress(RIDDLES.length);p.textContent='¡Has completado todos los acertijos!';h.style.display='none';document.getElementById('final').style.display='block';document.getElementById('giftCode').textContent=FINAL_CODE;ans.disabled=true;return;}const r=RIDDLES[state.idx];p.textContent=r.prompt;h.textContent='💡 '+(r.hint||'');h.style.display=r.hint?'block':'none';s.textContent='';ans.value='';ans.disabled=false;setProgress(state.idx);ans.focus()}
     function check(){const input=norm(document.getElementById('answer').value);if(!input)return;const r=RIDDLES[state.idx];const ok=r.answers.some(a=>norm(a)===input);const s=document.getElementById('status');if(ok){s.className='status ok';s.textContent='¡Correcto!';state.idx++;save();setTimeout(showRiddle,700)}else{s.className='status bad';s.textContent='No es correcto.'}}
     function hint(){document.getElementById('hint').style.display='block'}
     function resetAll(){state.idx=0;save();showRiddle()}
