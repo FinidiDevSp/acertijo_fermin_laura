@@ -139,6 +139,7 @@
       </div>
       <div class="status" id="status"></div>
       <div class="progress"><div class="bar" id="bar"></div></div>
+      <div id="progressText">0/6</div>
       <div class="final" id="final">
         <h2>¡Todo resuelto! 🎉</h2>
         <p>Enhorabuena, mente brillante y corazón rojillo. Aquí está tu código:</p>
@@ -166,7 +167,7 @@
     let state={idx:0};
     function save(){localStorage.setItem(STATE_KEY,JSON.stringify(state))}
     function load(){try{const raw=localStorage.getItem(STATE_KEY);if(raw){const s=JSON.parse(raw);if(Number.isInteger(s.idx))state=s}}catch(e){}}
-    function setProgress(i){const pct=Math.min(100,Math.round((i/RIDDLES.length)*100));document.getElementById('bar').style.width=pct+'%'}
+    function setProgress(i){const pct=Math.min(100,Math.round((i/RIDDLES.length)*100));document.getElementById('bar').style.width=pct+'%';document.getElementById('progressText').textContent=`${i}/${RIDDLES.length}`}
     function showRiddle(){const p=document.getElementById('prompt');const h=document.getElementById('hint');const s=document.getElementById('status');const ans=document.getElementById('answer');if(state.idx>=RIDDLES.length){setProgress(RIDDLES.length);p.textContent='¡Has completado todos los acertijos!';h.style.display='none';document.getElementById('final').style.display='block';document.getElementById('giftCode').textContent=FINAL_CODE;ans.disabled=true;return;}const r=RIDDLES[state.idx];p.textContent=r.prompt;h.textContent='💡 '+(r.hint||'');h.style.display=r.hint?'block':'none';s.textContent='';ans.value='';ans.disabled=false;setProgress(state.idx);ans.focus()}
     function check(){const input=norm(document.getElementById('answer').value);if(!input)return;const r=RIDDLES[state.idx];const ok=r.answers.some(a=>norm(a)===input);const s=document.getElementById('status');if(ok){s.className='status ok';s.textContent='¡Correcto!';state.idx++;save();setTimeout(showRiddle,700)}else{s.className='status bad';s.textContent='No es correcto.'}}
     function hint(){document.getElementById('hint').style.display='block'}
