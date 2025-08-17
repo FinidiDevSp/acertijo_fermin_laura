@@ -14,6 +14,7 @@ const RIDDLES = [
             "plaza del castillo",
             "plaza del castillo de pamplona",
             "plaza del castillo pamplona",
+            "la plaza del castillo",
         ],
         hints: [
             "Me llaman el “salón” de la ciudad.",
@@ -38,11 +39,7 @@ const RIDDLES = [
     },
     {
         prompt: "Nací para la pólvora y vigilar la puerta de un reino. Hoy, en mi estrella de piedra, pasean familias, trotan perros y resuenan conciertos. Soy fortaleza que aprendió a ser parque. ¿Quién soy?",
-        answers: [
-            "ciudadela",
-            "la ciudadela",
-            "ciudadela de pamplona",
-        ],
+        answers: ["ciudadela", "la ciudadela", "ciudadela de pamplona"],
         hints: [
             "Mi planta vista desde arriba dibuja una estrella.",
             "Renacentista, de bastiones y fosos.",
@@ -59,6 +56,7 @@ const RIDDLES = [
             "palacio real de olite",
             "olite",
             "castillo-palacio de olite",
+            "el castillo de olite",
         ],
         hints: [
             "Gótico y navarro me definen.",
@@ -88,7 +86,12 @@ const RIDDLES = [
     },
     {
         prompt: "Mis hayas hablan en susurros verdes y el otoño me escribe con tinta roja y cobre. Entre brumas y ríos, crezco silenciosa y enorme, como una catedral de árboles. ¿Qué bosque soy?",
-        answers: ["selva de irati", "irati", "bosque de irati"],
+        answers: [
+            "selva de irati",
+            "irati",
+            "bosque de irati",
+            "la selva de irati",
+        ],
         hints: [
             "Hayedo-abetal de los mayores de Europa.",
             "Entre los valles de Aezkoa y Salazar.",
@@ -105,6 +108,7 @@ const RIDDLES = [
             "camino francés",
             "camino de santiago navarra",
             "camino frances",
+            "el camino de santiago",
         ],
         hints: [
             "Roncesvalles/Orreaga es mi pórtico navarro.",
@@ -150,7 +154,7 @@ const RIDDLES = [
         ],
     },
     {
-        prompt: "Mi apellido suena a filo, pero corté sobre todo distancias. Llevé el brazal sin alzar la voz y marqué época con pasos firmes. ¿Qué capitán navarro te viene a la mente?",
+        prompt: "Mi apellido suena a filo, pero corté sobre todo distancias. Llevé el brazalete sin alzar la voz y marqué época con pasos firmes. ¿Qué capitán navarro te viene a la mente?",
         answers: ["patxi puñal", "puñal", "francisco puñal"],
         hints: [
             "Centrocampista de trabajo y poso.",
@@ -162,7 +166,7 @@ const RIDDLES = [
         ],
     },
     {
-        prompt: "No soy muro, pero cierro la puerta; no soy campanario, pero mando por alto. De la tierra y del aire, vigilo cada centro. Llevo brazal y apellido común. ¿Quién es el central de la casa?",
+        prompt: "No soy muro, pero cierro la puerta; no soy campanario, pero mando por alto. De la tierra y del aire, vigilo cada centro. Llevo brazalete y apellido común. ¿Quién es el jugador?",
         answers: [
             "david garcia",
             "david garcía",
@@ -179,7 +183,7 @@ const RIDDLES = [
         ],
     },
 ];
-const FINAL_CODE = "OSASUNA-2025";
+const FINAL_CODE = "OPERACION-ANDALUCIA";
 const TOTAL_HINTS = 3;
 const STATE_KEY = "acertijo-boda-ferminlaura";
 let state = { idx: 0, hints: 0, attempts: [] };
@@ -193,16 +197,12 @@ function load() {
             const s = JSON.parse(raw);
             if (Number.isInteger(s.idx)) state.idx = s.idx;
             if (Number.isInteger(s.hints)) state.hints = s.hints;
-            if (Array.isArray(s.attempts))
-                state.attempts = s.attempts;
+            if (Array.isArray(s.attempts)) state.attempts = s.attempts;
         }
     } catch (e) {}
 }
 function setProgress(i) {
-    const pct = Math.min(
-        100,
-        Math.round((i / RIDDLES.length) * 100)
-    );
+    const pct = Math.min(100, Math.round((i / RIDDLES.length) * 100));
     document.getElementById("bar").style.width = pct + "%";
     document.getElementById(
         "progressText"
@@ -224,8 +224,7 @@ function showRiddle() {
         p.textContent = "¡Has completado todos los acertijos!";
         h.style.display = "none";
         document.getElementById("final").style.display = "block";
-        document.getElementById("giftCode").textContent =
-            FINAL_CODE;
+        document.getElementById("giftCode").textContent = FINAL_CODE;
         const m = document.getElementById("copyMsg");
         m.textContent = "";
         m.className = "status";
@@ -253,9 +252,7 @@ function confetti() {
         const c = document.createElement("div");
         c.className = "confetti";
         c.style.left = Math.random() * 100 + "%";
-        c.style.backgroundColor = `hsl(${
-            Math.random() * 360
-        },100%,50%)`;
+        c.style.backgroundColor = `hsl(${Math.random() * 360},100%,50%)`;
         c.style.animationDelay = Math.random() * 0.5 + "s";
         container.appendChild(c);
     }
@@ -325,16 +322,10 @@ function copyCode() {
         m.textContent = "Copiado al portapapeles";
     });
 }
-document
-    .getElementById("btnCheck")
-    .addEventListener("click", check);
+document.getElementById("btnCheck").addEventListener("click", check);
 document.getElementById("btnHint").addEventListener("click", hint);
-document
-    .getElementById("btnReset")
-    .addEventListener("click", resetAll);
-document
-    .getElementById("btnCopy")
-    .addEventListener("click", copyCode);
+document.getElementById("btnReset").addEventListener("click", resetAll);
+document.getElementById("btnCopy").addEventListener("click", copyCode);
 document.addEventListener("keydown", (e) => {
     if (e.key === "Enter") check();
 });
@@ -343,8 +334,6 @@ function startGame() {
     document.getElementById("riddleCard").style.display = "block";
     showRiddle();
 }
-document
-    .getElementById("btnStart")
-    .addEventListener("click", startGame);
+document.getElementById("btnStart").addEventListener("click", startGame);
 load();
 updateHintButton();
