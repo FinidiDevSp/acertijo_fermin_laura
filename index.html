@@ -109,9 +109,6 @@
     a:hover{text-decoration:underline}
 
     .chip{display:inline-block; background:#f1f5f9; border:1px solid #e5e7eb; color:#0f172a; padding:.15rem .5rem; border-radius:999px; font-size:.8rem}
-    /* Intro overlay */
-    #intro{position:fixed; inset:0; display:grid; place-items:center; background:rgba(0,0,0,.8); color:#fff; text-align:center; padding:1.5rem; z-index:9999}
-    #intro button{margin-top:1rem}
     /* Confetti and shake animations */
     .confetti-container{position:fixed; inset:0; pointer-events:none; overflow:hidden;}
     .confetti{position:absolute; width:8px; height:8px; border-radius:2px; opacity:0; animation:confetti 1s linear forwards}
@@ -121,15 +118,6 @@
     </style>
   </head>
   <body>
-  <div id="intro">
-    <div>
-      <p>¡Bienvenidos! Ya habéis disfrutado de un pequeño adelanto del bote.
-        Para llevaros el premio completo deberéis resolver 11 acertijos y
-        obtener un código final. Cuando nos lo enviéis, el bote será
-        vuestro.</p>
-      <button id="btnStart">Comenzar</button>
-    </div>
-  </div>
   <header>
     <div class="crest"><span class="dot"></span> ENHORABUENA PAREJA</div>
     <h1 class="hero">FERMÍN <span class="amp">&</span> LAURA</h1>
@@ -138,23 +126,33 @@
 
   <main>
     <div class="card" id="app">
-      <div class="prompt" id="prompt">Cargando acertijo…</div>
-      <div class="hint" id="hint" style="display:none"></div>
-      <div class="controls">
-        <input id="answer" type="text" placeholder="Escribe tu respuesta…" autocomplete="off" />
-        <button id="btnCheck">Comprobar</button>
-        <button id="btnHint">Pista (3)</button>
-        <button id="btnReset">Reiniciar</button>
+      <div id="introCard">
+        <p>¡Bienvenidos! Ya habéis disfrutado de un pequeño adelanto del bote.
+          Para llevaros el premio completo deberéis resolver 11 acertijos y
+          obtener un código final. Cuando nos lo enviéis, el bote será
+          vuestro.</p>
+        <button id="btnStart">Comenzar</button>
       </div>
-      <div class="status" id="status"></div>
-      <div class="progress"><div class="bar" id="bar"></div></div>
-      <div id="progressText">0/11</div>
-      <div class="final" id="final">
-        <h2>¡Todo resuelto! 🎉</h2>
-        <p>Enhorabuena, mente brillante y corazón rojillo. Aquí está tu código:</p>
-        <p class="code" id="giftCode">OSASUNA-2025</p>
-        <button id="btnCopy">Copiar código</button>
-        <div id="copyMsg" class="status"></div>
+
+      <div id="riddleCard" style="display:none">
+        <div class="prompt" id="prompt">Cargando acertijo…</div>
+        <div class="hint" id="hint" style="display:none"></div>
+        <div class="controls">
+          <input id="answer" type="text" placeholder="Escribe tu respuesta…" autocomplete="off" />
+          <button id="btnCheck">Comprobar</button>
+          <button id="btnHint">Pista (3)</button>
+          <button id="btnReset">Reiniciar</button>
+        </div>
+        <div class="status" id="status"></div>
+        <div class="progress"><div class="bar" id="bar"></div></div>
+        <div id="progressText">0/11</div>
+        <div class="final" id="final">
+          <h2>¡Todo resuelto! 🎉</h2>
+          <p>Enhorabuena, mente brillante y corazón rojillo. Aquí está tu código:</p>
+          <p class="code" id="giftCode">OSASUNA-2025</p>
+          <button id="btnCopy">Copiar código</button>
+          <div id="copyMsg" class="status"></div>
+        </div>
       </div>
     </div>
   </main>
@@ -198,7 +196,11 @@
     document.getElementById('btnReset').addEventListener('click',resetAll);
     document.getElementById('btnCopy').addEventListener('click',copyCode);
     document.addEventListener('keydown',(e)=>{if(e.key==='Enter')check()});
-    function startGame(){document.getElementById('intro').style.display='none';showRiddle()}
+    function startGame(){
+      document.getElementById('introCard').style.display='none';
+      document.getElementById('riddleCard').style.display='block';
+      showRiddle();
+    }
     document.getElementById('btnStart').addEventListener('click',startGame);
     load();
     updateHintButton();
